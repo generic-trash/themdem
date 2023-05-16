@@ -7,7 +7,7 @@ from capstone.x86_const import *
 class IndirectSpAddPass(BasePass):
     def match_instructions(self, insns):
         matches = []
-        for i, insn in enumerate(insns[:-4]):
+        for i, insn in enumerate(insns[:-5]):
             seq = insns[i: i + 6]
             if seq[0].mnemonic != "push":
                 continue

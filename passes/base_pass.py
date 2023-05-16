@@ -2,7 +2,7 @@ from capstone import *
 from keystone import *
 from typing import List
 from .validation import *
-
+from pprint import pprint
 
 class BasePass:
     def __init__(self, md: Cs, ks: Ks):
@@ -40,7 +40,14 @@ class BasePass:
 
         sanitized = self._sanitize_instructions(insns)
         bad = self._to_bytes(sanitized)
-        assert validate(good, bad)
+        if not validate(good, bad):
+            print("-" * 80)
+            pprint(insns)
+            print("-" * 80)
+            pprint(sanitized)
+            print("-" * 80)
+
+            raise AssertionError("value is not same for pass, ", self.__class__.__name__)
         return sanitized
 
     def _match_instructions(self, insns, pattern):

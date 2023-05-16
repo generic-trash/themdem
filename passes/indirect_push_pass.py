@@ -11,7 +11,8 @@ class IndirectPushPass(BasePass):
             nextinsn = insns[i + 1]
             if (insn.mnemonic != "sub" or insn.op_str != "esp, 4") and (insn.mnemonic != "push"):
                 continue
-            if nextinsn.mnemonic != "mov" or not nextinsn.op_str.startswith("dword ptr [esp]"):
+            if nextinsn.mnemonic != "mov" or not nextinsn.op_str.startswith("dword ptr [esp]") or \
+                    nextinsn.op_str.endswith("esp"):
                 continue
             matches.append(i)
         return matches

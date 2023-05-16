@@ -236,3 +236,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 windows_rootfs
+miasm
+vc_example_protected_demutated.exe

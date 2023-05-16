@@ -15,8 +15,9 @@ def trap(emu, type, address, size, value, user_data):
 def setup_unicorn(code):
     emu = Uc(UC_ARCH_X86, UC_MODE_32)
     emu.traps = []
-    emu.mem_map(ADDRESS, 2 * 1024 * 2048)
+    emu.mem_map(ADDRESS, 4096)
     # emu.mem_map(0, 2 * 1024 * 2048)
+    emu.mem_map(ORIG_SP & 0xfffff000, 4096)
     emu.mem_write(ADDRESS, code)
     for i, reg in enumerate(regs):
         emu.reg_write(reg, 0x69420 + i)
@@ -49,8 +50,8 @@ def validate(good, bad):
     if goodstack != badstack:
         print("Stack Comparison Failed", goodstack, badstack)
         return False
-    # if goodstate.traps != badstate.traps:
-    #     print("Traps Are Not Equal")
-    #     print(goodstate.traps, badstate.traps)
-    #     return False
+    if goodstate.traps != badstate.traps:
+        print("Traps Are Not Equal")
+        print(goodstate.traps, badstate.traps)
+        return False
     return True

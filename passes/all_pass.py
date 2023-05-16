@@ -11,18 +11,23 @@ from .constant_propagation import *
 from .indirect_xchg_pass_1 import *
 from .indirect_mov_pass import *
 from .indirect_xchg_pass_2 import *
-
+from .sandwich_arithmetic_pass_2 import *
+from .indirect_xchg_pass_3 import *
+from .push_esp_pass import *
 class AllPass(ZeroPass):
     def __init__(self, md, ks):
         super().__init__(md, ks, CombinePass(md, ks, [
             IndirectPushPass,
+            IndirectPushEspPass,
             IndirectPopPass,
             IndirectStackMovePass,
             IndirectMovPass,
             ConstantPropagationPass,
             PopEspPass,
             IndirectXchgPassStack,
+            IndirectXchgPass,
             SandwichArithmeticPass,
+            SandwichArithmeticPass2,
             IndirectSpAddPass,
             IndirectSpSubPass,
             IndirectXchgPassStackLarge

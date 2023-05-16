@@ -12,7 +12,7 @@ class ConstantPropagationPass(BasePass):
 
             if insn.mnemonic != "mov" or insn.operands[0].type != CS_OP_REG or insn.operands[1].type != CS_OP_IMM:
                 continue
-            if nextinsn.mnemonic not in ("add", "sub", "xor", "or", "and", "shl", "shr", "not", "neg") or \
+            if nextinsn.mnemonic not in ("add", "sub", "xor", "or", "and", "shl", "shr", "not", "neg", "dec", "inc") or \
                     nextinsn.operands[0].type != CS_OP_REG or nextinsn.operands[0].reg != insn.operands[0].reg or \
                     (len(nextinsn.operands) != 1 and nextinsn.operands[1].type != CS_OP_IMM):
                 continue
@@ -32,6 +32,10 @@ class ConstantPropagationPass(BasePass):
             val = ~op0
         elif nextinsn.mnemonic == "neg":
             val = -op0
+        elif nextinsn.mnemonic == "dec":
+            val = op0 - 1
+        elif nextinsn.mnemonic == "inc":
+            val = op0 + 1
         elif nextinsn.mnemonic == "add":
             val = op0 + op1
         elif nextinsn.mnemonic == "sub":
@@ -43,9 +47,9 @@ class ConstantPropagationPass(BasePass):
         elif nextinsn.mnemonic == "xor":
             val = op0 ^ op1
         elif nextinsn.mnemonic == "shr":
-            val = op0 | op1
+            val = op0 >> op1
         elif nextinsn.mnemonic == "shl":
-            val = op0 ^ op1
+            val = op0 << op1
         else:
             raise ValueError
         instr = f"mov {self.md.reg_name(insn.operands[0].reg)}, {hex(val & 0xffffffff)}"
