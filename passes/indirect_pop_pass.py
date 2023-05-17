@@ -10,7 +10,7 @@ class IndirectPopPass(BasePass):
         for i, insn in enumerate(insns[:-1]):
             nextinsn = insns[i + 1]
 
-            if insn.mnemonic != "mov" or not insn.op_str.endswith("dword ptr [esp]"):
+            if insn.mnemonic != "mov" or not insn.op_str.endswith("dword ptr [esp]") or insn.op_str.startswith("esp"):
                 continue
             if nextinsn.mnemonic != "add" or nextinsn.op_str != "esp, 4":
                 continue

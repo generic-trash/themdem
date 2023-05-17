@@ -14,6 +14,7 @@ from .indirect_xchg_pass_2 import *
 from .sandwich_arithmetic_pass_2 import *
 from .indirect_xchg_pass_3 import *
 from .push_esp_pass import *
+from .sandwich_arithmetic_pass_3 import *
 class AllPass(ZeroPass):
     def __init__(self, md, ks):
         super().__init__(md, ks, CombinePass(md, ks, [
@@ -28,6 +29,7 @@ class AllPass(ZeroPass):
             IndirectXchgPass,
             SandwichArithmeticPass,
             SandwichArithmeticPass2,
+            SandwichArithmeticPassStack,
             IndirectSpAddPass,
             IndirectSpSubPass,
             IndirectXchgPassStackLarge

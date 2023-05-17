@@ -9,7 +9,7 @@ from miasm.analysis.binary import Container
 from miasm.analysis.machine import Machine
 from miasm.core.locationdb import LocationDB
 
-path = "windows_rootfs/vc_example_protected_debug.exe"
+path = "windows_rootfs/vc_example_protected_fish_white.exe"
 fdesc = open(path, "rb")
 md = Cs(CS_ARCH_X86, CS_MODE_32)
 md.detail = True
@@ -22,11 +22,22 @@ loc_db = LocationDB()
 cont = Container.from_stream(fdesc, loc_db)
 machine = Machine(cont.arch)
 mdis = machine.dis_engine(cont.bin_stream, loc_db=cont.loc_db)
-addr = 0x269360c
-asmcfg = mdis.dis_multiblock(addr)
+addrs = [
+    0x2771615,
+    0x276a57f,
+    0x27380dc,
+    0x27aaf9d,
+    0x27adc9b,
+    0x27833ab,
+    0x27499ab
+]
 
-locs = [block.get_range() for block in asmcfg.blocks]
+locs = []
 
+for addr in addrs:
+    asmcfg = mdis.dis_multiblock(addr)
+
+    locs += [block.get_range() for block in asmcfg.blocks]
 allpass = AllPass(md, ks)
 
 for start, end in locs:
@@ -47,6 +58,8 @@ for start, end in locs:
 
     seq = b""
     for insn in insns:
+        if insn.mnemonic == "mov" and insn.op_str == "esp, dword ptr [esp]":
+            raise Exception("esp write detected")
         seq += insn.bytes
 
     seq += b"\x90" * (size - len(seq))
