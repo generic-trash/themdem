@@ -33,7 +33,7 @@ setup_unicorn(b"\x90")
 
 def emulate(code):
     emu = setup_unicorn(code)
-    emu.emu_start(ADDRESS, ADDRESS + len(code))
+    emu.emu_start(ADDRESS, ADDRESS + len(code), timeout=30000)
     return emu
 
 

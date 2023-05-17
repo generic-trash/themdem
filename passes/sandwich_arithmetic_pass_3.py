@@ -11,7 +11,7 @@ class SandwichArithmeticPassStack(BasePass):
             seq = insns[i: i + 3]
             if seq[0].mnemonic != "push":
                 continue
-            if seq[1].mnemonic not in ("not", "neg") or seq[1].op_str != "dword ptr [esp]":
+            if seq[1].mnemonic not in ("not", "neg", "inc", "dec") or seq[1].op_str != "dword ptr [esp]":
                 continue
             if seq[2].mnemonic != "pop" or seq[2].op_str != seq[0].op_str:
                 continue
