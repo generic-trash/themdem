@@ -10,6 +10,8 @@ class IndirectMovPass(BasePass):
                 continue
             if nextinsn.mnemonic != "pop":
                 continue
+            if "ptr" in insn.op_str and "ptr" in nextinsn.op_str:
+                continue
             matches.append(i)
         return matches
 

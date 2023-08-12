@@ -4,7 +4,7 @@ from .base_pass import *
 class IndirectXchgPassStackLarge(BasePass):
     def match_instructions(self, insns):
         matches = []
-        for i, insn in enumerate(insns[:-1]):
+        for i, insn in enumerate(insns[:-10]):
             seq = insns[i: i + 11]
             if seq[0].mnemonic != "pushfd":
                 continue

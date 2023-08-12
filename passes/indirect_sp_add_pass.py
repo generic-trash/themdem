@@ -15,7 +15,8 @@ class IndirectSpAddPass(BasePass):
                 continue
             if seq[2].mnemonic != "add" or seq[2].op_str != f"{seq[0].op_str}, 4":
                 continue
-            if seq[3].mnemonic != "add" or seq[3].op_str != f"{seq[0].op_str}, 4":
+            if seq[3].mnemonic != "add" or not seq[3].op_str.startswith(seq[0].op_str) or \
+                seq[3].operands[1].type != CS_OP_IMM:
                 continue
             if seq[4].mnemonic != "xchg" or seq[4].op_str not in \
                     (f"{seq[0].op_str}, dword ptr [esp]", f"dword ptr [esp], {seq[0].op_str}"):
@@ -26,7 +27,7 @@ class IndirectSpAddPass(BasePass):
         return matches
 
     def generate_substitution(self, insns, match):
-        instr = "add esp, 4"
+        instr = f"add esp, {insns[match + 3].operands[1].imm}"
         subs = {
             match: self._assemble(instr, insns[match].address),
             match + 1: None,

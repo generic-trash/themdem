@@ -16,7 +16,7 @@ class SandwichArithmeticPass2(BasePass):
                 continue
             if seq[2].mnemonic not in ('add', 'sub') or seq[2].operands[0].type != CS_OP_REG or \
                     seq[2].operands[0].reg != seq[0].operands[0].reg or seq[2].operands[1].type != CS_OP_IMM or \
-                seq[0].operands[1].imm != seq[2].operands[1].imm:
+                seq[0].operands[1].imm != seq[2].operands[1].imm or seq[2].mnemonic == seq[0].mnemonic:
                 continue
             matches.append(i)
         return matches

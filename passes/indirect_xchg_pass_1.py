@@ -2,7 +2,7 @@ from .base_pass import *
 class IndirectXchgPassStack(BasePass):
     def match_instructions(self, insns):
         matches = []
-        for i, insn in enumerate(insns[:-1]):
+        for i, insn in enumerate(insns[:-2]):
             seq = insns[i: i + 3]
             if seq[0].mnemonic != "push" or seq[0].operands[0].type != CS_OP_REG:
                 continue

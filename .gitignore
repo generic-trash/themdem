@@ -239,3 +239,5 @@ windows_rootfs
 miasm
 vc_example_protected_demutated.exe
 optimizer.py
+onionstuff
+*.exe
