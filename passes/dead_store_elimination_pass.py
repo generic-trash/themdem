@@ -2,9 +2,13 @@ from capstone import *
 from keystone import *
 from .base_pass import *
 from capstone.x86_const import *
+from triton import *
+
 
 
 class DSEPass(BasePass):
+    ctx = TritonContext(ARCH.X86)
+
     def match_instructions(self, insns: List[CsInsn]):
         matches = []
         self.highlights = []
@@ -16,11 +20,13 @@ class DSEPass(BasePass):
                 if operand.type != CS_OP_REG:
                     continue
                 if operand.access & CS_AC_WRITE:
-                    targops.append(self._largest_register(operand.reg))
+                    targops.append(operand.reg)
             if len(targops) > 1:
                 continue
 
             for j, overwriter in enumerate(insns[i + 1:]):
+                if overwriter.mnemonic in ["pushfd"]:
+                    break
                 if self._reads(overwriter, targops):
                     break
                 if self._writes(overwriter, targops):
