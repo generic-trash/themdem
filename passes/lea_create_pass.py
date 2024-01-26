@@ -16,7 +16,7 @@ class LeaCreatePass(BasePass):
             if insn.operands[1].type != CS_OP_IMM:
                 continue
             # print(reg)
-            for j, espmov in enumerate(insns[i::-1]):
+            for j, espmov in enumerate(insns[i - 1::-1]):
                 if not self._writes(espmov, [self._largest_register(reg)]):
                     continue
 
@@ -29,7 +29,7 @@ class LeaCreatePass(BasePass):
 
 
                 # print(espmov, espmov.regs_write)
-                matches.append([i, i - j, reg, insn.operands[1].imm])
+                matches.append([i, i - j - 1, reg, insn.operands[1].imm])
                 break
             # matches.append(i)
         return matches
@@ -47,7 +47,6 @@ class LeaCreatePass(BasePass):
         instr = f'lea {self.md.reg_name(match[2])}, [ebp + {hex(match[3])}]'
 
         subs = {
-            match[0]: None,
-            match[1]: self._assemble(instr, insns[match[1]].address)
+            match[0]: self._assemble(instr, insns[match[1]].address)
         }
         return subs
